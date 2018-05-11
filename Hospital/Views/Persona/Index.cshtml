@@ -1,0 +1,98 @@
+﻿@model IEnumerable<Hospital.Models.Persona>
+
+@{
+    ViewBag.Title = "Personas";
+}
+
+<h2>Personas</h2>
+
+<p>
+    @Html.ActionLink("Crear nueva persona", "Crear")
+</p>
+<table class="table" id="personas">
+    <thead>
+        <tr>
+            <th>
+                Primer Nombre
+            </th>
+            <th>
+                Segundo Nombre
+            </th>
+            <th>
+                Número Documento
+            </th>
+            <th>
+                Tipo Documento
+            </th>
+            <th>
+                Fecha Nacimiento
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrimerNombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SegundoNombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumeroDocumento)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TipoDocumento.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FechaNacimiento)
+                </td>
+                <td>
+                    @Html.ActionLink("Editar", "Editar", new { id = item.Id }) |
+                    @Html.ActionLink("Eliminar", "Eliminar", new { id = item.Id })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var pacientes = $('#personas').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'excel',
+                    text: 'Excel'
+                },
+                {
+                    extend: 'print',
+                    text: 'HTML'
+                },
+                {
+                    extend: 'pdf',
+                    text: 'PDF'
+                }
+            ],
+            language: {
+                "decimal": ".",
+                "thousands": ",",
+                "processing": "<span><b>Buscando registros</b></span>",
+                "lengthMenu": "Mostrar _MENU_ registros por página",
+                "zeroRecords": "No se encontraron registros",
+                "info": "Mostrando página _PAGE_ de _PAGES_",
+                "infoEmpty": "No hay registros disponibles",
+                "infoFiltered": "(Filtrado de _MAX_ registros totales)",
+                "search": "Buscar:",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Último",
+                    "next": "Próximo",
+                    "previous": "Anterior"
+                }
+            }
+        });
+    });
+</script>
+

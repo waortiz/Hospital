@@ -1,0 +1,171 @@
+﻿@model Hospital.Models.Persona
+@{
+    ViewBag.Title = "Crear";
+}
+
+<form method="post" id="persona" action="/Persona/Crear">
+    <br />
+    <div class="panel panel-primary">
+        <div class="panel-heading">Datos Persona</div>
+        <div class="panel-body">
+            <div id="alert_placeholder"></div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="primerNombre">Primer nombre</label>
+                        @Html.TextBoxFor(p => p.PrimerNombre,
+                       new { @class = "form-control",
+                           @placeholder = "Primer Nombre",
+                           @maxlength = "100",
+                           @required = "required"})
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="primerNombre">Segundo nombre</label>
+                        @Html.TextBoxFor(p => p.SegundoNombre,
+                          new
+                          {
+                              @class = "form-control",
+                              @placeholder = "Segundo Nombre",
+                              @maxlength = "100"
+                          })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="primerNombre">Primer apellido</label>
+                        @Html.TextBoxFor(p => p.PrimerApellido,
+                       new
+                       {
+                           @class = "form-control",
+                           @placeholder = "Primer Apellido",
+                           @maxlength = "100",
+                           @required = "required"
+                       })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="primerNombre">Segundo apellido</label>
+                        @Html.TextBoxFor(p => p.SegundoApellido,
+                          new
+                          {
+                              @class = "form-control",
+                              @placeholder = "Segundo Apellido",
+                              @maxlength = "100"
+                          })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="numeroDocumento">Número de documento</label>
+                        @Html.TextBoxFor(p => p.NumeroDocumento,
+                       new
+                       {
+                           @class = "form-control numero",
+                           @placeholder = "Introduce el número de documento",
+                           @required = "required",
+                           @maxlength = "20"
+                       })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="tipoDocumento">Tipo de documento</label>
+                        @Html.DropDownListFor(p => p.TipoDocumento.Id,
+                       (IEnumerable<SelectListItem>)ViewBag.TiposDocumento, string.Empty,
+                       new { @class = "form-control", @required = "required" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="fechaNacimiento">Número de nacimiento</label>
+                    <div class="input-group date" data-provide="datepicker">
+                        @Html.TextBoxFor(p => p.FechaNacimiento, "{0:dd/MM/yyyy}",
+                           new
+                           {
+                               @class = "form-control datepicker",
+                               @placeholder = "Introduce la fecha de nacimiento",
+                               @required = "required",
+                               @readonly = "readonly",
+                               @maxlength = "10"
+                           })
+                        <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="sexo">Sexo</label>
+                        Femenino&nbsp;
+                        @Html.RadioButtonFor(p => p.Sexo, "F")
+                        Masculino&nbsp;
+                        @Html.RadioButtonFor(p => p.Sexo, "M")
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-10">
+                </div>
+                <div class="col-md-2">
+                        @Html.HiddenFor(p => p.Id)
+                        <input type="submit" value="Guardar" id="guardar" class="btn btn-primary" />
+                    </div>
+                </div>
+        </div>
+    </div>
+    <script>
+        $('.numero').keyup(function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+        $('.datepicker').datepicker({
+            format: 'dd/mm/yyyy',
+            startDate: '-3d'
+        });
+
+        $('#persona').submit(function (event) {
+            if ($('#NumeroDocumento').val().length < 6) {
+                bootstrap_alert.warning('El número de documento debe tener mínimo seis dígitos');
+                return false;
+            }
+            if (validarFechaNacimiento($('#FechaNacimiento').val()) == false) {
+                bootstrap_alert.warning('La fecha de nacimiento debe ser menor a la fecha del sistema');
+                return false;
+            }
+            if (!$('#Sexo:checked').val() != "") {
+                bootstrap_alert.warning('Debe seleccionar el sexo');
+                return false;
+            }
+        });
+
+        bootstrap_alert = {};
+        bootstrap_alert.warning = function (message) {
+            $('#alert_placeholder').
+                html('<div class="alert alert-danger">' +
+                '<a class="close" data-dismiss="alert">×</a><span>'
+                + message + '</span></div>');
+        };
+
+        function validarFechaNacimiento(fecha) {
+            var fechas = fecha.split("/");
+            var nuevaFecha = new Date(fechas[2],
+                parseInt(fechas[1], 10) - 1,
+                fechas[0]);
+            if (nuevaFecha > new Date()) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+    </script>
+
+</form>
+
